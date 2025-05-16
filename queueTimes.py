@@ -35,7 +35,7 @@ def main():
                     for jj in range(len(lands[ii]['rides'])):
                         curRide = lands[ii]['rides'][jj]
                         importantLines.append(json.dumps(curRide))
-                        print(f"{curRide['last_updated']} {curRide['name']} \t\t||\t\t {curRide['is_open']} \t\t||\t\t {curRide['wait_time']}")
+                        print(f"{curRide['last_updated']},{curRide['name']},{curRide['is_open']},{curRide['wait_time']}")
             print("")
         except Exception as e:
             print(e)
