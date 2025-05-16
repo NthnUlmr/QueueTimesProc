@@ -3,6 +3,9 @@ import requests
 import time
 import shutil
 import os
+import json
+
+
 def grab_json():
     response = requests.get('https://queue-times.com/parks/59/queue_times.json')
     if response.status_code == 200:
@@ -19,16 +22,20 @@ def grab_json():
 def main():
     while(True):
         response = grab_json()
+
+        importantLines = []
         try:
             responseJson = response.json()
             lands = responseJson['lands']
             rides = responseJson['rides']
 
+            
             for ii in range(len(lands)):
                 if 'coasters' in lands[ii]['name'].lower():
                     for jj in range(len(lands[ii]['rides'])):
                         curRide = lands[ii]['rides'][jj]
-                        print(curRide['last_updated'],curRide['name'],'\t\t||\t\t',curRide['is_open'],'\t\t||\t\t',curRide['wait_time'])
+                        importantLines.append(json.dumps(curRide))
+                        print(f"{curRide['last_updated']} {curRide['name']} \t\t||\t\t {curRide['is_open']} \t\t||\t\t {curRide['wait_time']}")
             print("")
         except Exception as e:
             print(e)
@@ -49,7 +56,8 @@ def main():
                 pass
         try:
             with open(save_fp,'a+') as saveFile:
-                saveFile.writelines(responseText) 
+                #saveFile.writelines(responseText) 
+                saveFile.writelines(importantLines)
             
         except Exception as e:
             print(e)
